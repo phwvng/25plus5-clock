@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.scss';
 
 function App() {
@@ -28,21 +28,21 @@ function App() {
 
   const changeTime = (amount, type) => {
     if (type === "break") {
-      if (breakTime <= 60 && amount < 0) {
+      if ((breakTime <= 60 && amount < 0) || (breakTime >= 3600 && amount > 0)) {
         return;
       }
       setBreakTime((prev) => prev + amount);
     } else {
-      if (displayTime <= 60 && amount < 0) {
+      if ((sessionTime <= 60 && amount < 0) || (sessionTime >= 3600 && amount > 0)) {
         return;
       }
       setSessionTime((prev) => prev + amount);
-      if (!timerOn){
+      if (!timerOn) {
         setDisplayTime(sessionTime + amount);
       }
     }
   };
-
+  
   const controlTime = () => {
     let second = 1000;
     let date = new Date().getTime();
@@ -83,8 +83,17 @@ function App() {
     setDisplayTime(25 * 60);
     setBreakTime(5 * 60);
     setSessionTime(25 * 60);
+    setTimerOn(false);
+    setOnBreak(false);
+    clearInterval(localStorage.getItem("interval-id"));
   };
-  
+
+  useEffect(() => {
+    setDisplayTime(sessionTime);
+  }
+  , [sessionTime]);
+
+
   return (
     <div className="App">
       <header className="App-header">
