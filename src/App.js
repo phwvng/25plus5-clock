@@ -65,13 +65,16 @@ function App() {
     audio.currentTime = 0;
   };
 
+  // UseEffect to handle transitions between session and break
   useEffect(() => {
     if (displayTime < 0) {
       if (!onBreak) {
+        // Switch to break when session ends
         setDisplayTime(breakTime);
         setOnBreak(true);
         playBreakSound();
       } else {
+        // Switch back to session when break ends
         setDisplayTime(sessionTime);
         setOnBreak(false);
         playBreakSound();
